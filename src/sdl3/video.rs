@@ -1777,14 +1777,14 @@ impl Window {
     }
 
     #[doc(alias = "SDL_GetWindowFullscreenMode")]
-    pub fn display_mode(&self) -> Option<DisplayMode> {
+    pub fn display_mode(&self) -> Result<DisplayMode, Error> {
         unsafe {
             // returns a pointer to the mode, or NULL if the window will be fullscreen desktop
             let mode_raw = sys::video::SDL_GetWindowFullscreenMode(self.context.raw);
             if mode_raw.is_null() {
-                return None;
+                return Err(get_error());
             }
-            Some(DisplayMode::from_ll(&*mode_raw))
+            Ok(DisplayMode::from_ll(&*mode_raw))
         }
     }
 
